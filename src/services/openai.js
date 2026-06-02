@@ -200,50 +200,6 @@ Build the entire post — its words, its tone, its message — around that answe
 If the answer is only "fun" — not enough. Go deeper.
 If the answer is "they will feel seen, connected, and proud to be part of this team" — now you are writing a Tal Shani post.`
 
-// ─── Brand Design Styles (based on real Tal Shani posts) ─────────────────────
-const BRAND_DESIGN_STYLES = `
-BRAND: טל שני | חוויה ארגונית עם ערך (Tal Shani - Organizational Experiences With Value)
-BRAND COLORS: olive green #4A5C3E, sage green #7B9071, light sage #B5C9A8, blush pink #F5E8E4, dusty rose #C49080, warm gold #C8A84B, white, dark charcoal #2C2C2C
-
-DESIGN STYLE REFERENCE (4 authentic post styles from this brand):
-
-STYLE 1 — "STORY WITH HEART" (for personal/emotional/inspirational/behind-the-scenes posts):
-Full-bleed warm lifestyle photo background (people at events, nature, golden hour). Large bold white Hebrew title top-right. Elegant warm gold italic calligraphic script for subtitle below title. Gold decorative horizontal line under subtitle. Three rows of bullet points: each with a small circular cream/beige icon badge on the right, Hebrew bold title, dotted separator, Hebrew description. Bottom section: bold white closing statement + gold italic script closing phrase + "טל שני" in elegant pink calligraphic script with "חוויה ארגונית עם ערך" tagline below. Dark gradient overlay on left side of photo for text readability.
-
-STYLE 2 — "SOFT CARD" (for tips/educational/how-to/professional advice posts):
-Warm softly blurred lifestyle photo background (person, nature, soft bokeh). Centered large rounded-corner semi-transparent cream/beige card overlay (rgba cream). Inside card: Hebrew question or title in dark bold at top. Body text with checkmark bullet points (✓) or numbered insights. Small decorative circles in olive green and blush pink scattered at corners outside card. Bottom of card: "טל שני | אירועים וחוויות עם ערך" in elegant handwriting-style script, website URL in small text.
-
-STYLE 3 — "BRAND PORTRAIT" (for sales/services/CTA posts):
-Professional portrait photo of woman on left half (warm golden natural light, nature path background, confident and warm smile). Right panel: soft pink/mauve gradient background. Brand name "טל שני" in large pink calligraphic script top-right + "חוויות ארגוניות עם ערך" tagline. Bold dark Hebrew headline. Gold/pink italic script secondary headline. Colored Hebrew text in dusty rose for featured benefit. 3 checkmark bullet points in dark text. Row of 4 small service icons with Hebrew labels (ימי גיבוש, אירועים, עשייה עם ערך, חוויה קולינרית). Two full-width CTA buttons in dark magenta/pink. Bottom bar: website + WhatsApp number in white on dark pink background.
-
-STYLE 4 — "ELEGANT MINIMAL" (for quotes/reflections/thought-leadership posts):
-Clean soft gradient background flowing from sage green to blush pink or ivory. Large centered elegant Hebrew typography as the visual hero. Minimal decorative heart or leaf ornament. Brand signature bottom-center. Simple, breathing, premium feel.
-
-IMPORTANT VISUAL RULES:
-- All text in image must be in Hebrew (RTL right-to-left)
-- No English text visible in the final design
-- Brand colors must be prominent
-
-VISUAL QUALITY STANDARD — describe it to yourself this way:
-"This looks like a spread from a premium Israeli lifestyle magazine."
-"This looks like a high-end template created by a senior brand designer — not a free Canva template."
-"This is suitable for an HR manager at a leading organization to proudly share."
-
-NEVER CREATE:
-- Stock photo feeling (suits, boardrooms, handshakes, office hallways)
-- Corporate handshake imagery
-- Generic business people posing
-- Blue corporate backgrounds
-- Neon or oversaturated colors
-- Cheap flyer design aesthetic
-- Cluttered or busy layouts
-- Aggressive marketing / "sale" visual language
-- Discount or promotional advertisement style
-- Low quality or template-looking typography
-- Trade show or expo atmosphere
-- Artificial or forced smiles
-`
-
 function buildSystemPrompt(extra = '') {
   const brand = getBrandInfo()
   let prompt = MASTER_BRAND
@@ -286,12 +242,11 @@ Study these successful posts from Tal Shani. Pay close attention to their length
   return prompt
 }
 
-async function callGPT(messages, { temperature = 0.8, maxTokens = 1500, jsonMode = false } = {}) {
+async function callGPT(messages, { temperature = 0.8, maxTokens = 1500 } = {}) {
   const key = getApiKey()
   if (!key) throw new Error('חסר API Key — היכנסי להגדרות והזיני אותו')
 
   const body = { model: 'gpt-4o', messages, temperature, max_tokens: maxTokens }
-  if (jsonMode) body.response_format = { type: 'json_object' }
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -589,20 +544,20 @@ Format:
       prompt: finalPrompt,
       n: 1,
       size: '1024x1024',
-      quality: 'standard',
-      response_format: 'b64_json'
+      quality: 'standard'
     })
   })
 
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}))
-    throw new Error(errData.error?.message || 'שגיאה בתקשורת עם שרתי OpenAI ליצירת התמונה')
+    const msg = errData.error?.message || `שגיאת HTTP ${response.status}`
+    throw new Error(`שגיאה בייצור תמונה: ${msg}`)
   }
 
   const data = await response.json()
   const item = data.data?.[0]
-  if (item?.b64_json) return `data:image/png;base64,${item.b64_json}`
   if (item?.url) return item.url
+  if (item?.b64_json) return `data:image/png;base64,${item.b64_json}`
   throw new Error('לא התקבלה תמונה מהשרת — אנא נסי שוב')
 }
 
@@ -693,7 +648,7 @@ ${goal ? `מטרה: ${goal}` : 'מטרה: יצירת ענין וקבלת פני�
   const raw = await callGPT([
     { role: 'system', content: buildSystemPrompt('You are also a senior multi-channel campaign strategist for premium Israeli B2B brands.') },
     { role: 'user', content: userPrompt }
-  ], { temperature: 0.78, maxTokens: 3000, jsonMode: true })
+  ], { temperature: 0.78, maxTokens: 3000 })
 
   try {
     return JSON.parse((raw || '').replace(/```json|```/g, '').trim())
@@ -731,7 +686,7 @@ export async function generateImageContent(postText) {
 
   const raw = await callGPT(
     [{ role: 'user', content: prompt }],
-    { temperature: 0.6, maxTokens: 600, jsonMode: true }
+    { temperature: 0.6, maxTokens: 600 }
   )
   try {
     return JSON.parse(raw.replace(/```json|```/g, '').trim())
@@ -806,53 +761,55 @@ export const POST_TYPES = [
 export async function generateSalesPostContent({ brief = '', topic = '', templateId = 'tip' } = {}) {
   const postType = POST_TYPES.find(t => t.id === templateId) || POST_TYPES[0]
 
+  const themes = ['cream-pink', 'sage-gold', 'ivory-rose', 'dark-olive']
+  const randomTheme = themes[Math.floor(Math.random() * themes.length)]
+
   const userPrompt = `
 =================================
 BRAND ENGINE — TAL SHANI
-Style Lock: NEVER change the design. Only generate content fields.
+Post type: "${postType.name}"
+Focus: ${postType.systemHint}
+Brief: "${brief || topic || 'צרי תוכן מייצג לסוג פוסט זה'}"
 =================================
 
-POST TYPE: "${postType.name}"
-TYPE FOCUS: ${postType.systemHint}
+Generate content for a SPLIT-PANEL branded post image (like a premium Israeli lifestyle magazine).
+The design has: bold headline, italic personal line, service icons, and 3-word values oval.
 
-Default services for this post type: ${postType.defaultServices.join(', ')}
+CONTENT RULES:
 
-=================================
-BRIEF FROM USER
-=================================
-"${brief || topic || 'צרי תוכן מייצג לסוג פוסט זה'}"
+headline (required):
+- A BOLD STATEMENT or CLAIM — NOT a noun phrase
+- 8–14 Hebrew words, ends with period
+- Provocative, true, brand-aligned
+- Example style: "אירוע טוב לא מתחיל באטרקציה. הוא מתחיל במטרה."
+- NEVER: "יום גיבוש מושלם", "חבילות", "מבצע", generic phrases
 
-=================================
-GENERATE THESE FIELDS ONLY
-=================================
+personal_line (required):
+- The SHORT italic punchline (4–7 words, continues or contrasts the headline)
+- Reads as if Tal is speaking from experience
+- Will appear in cursive italic style on the design
 
-headline:
-- Maximum 5 bold Hebrew words
-- If it is a TIP, consider opening with "טיפ #1", "טיפ #2" etc.
-- Emotionally powerful and unique to this post type's angle
-- NEVER use: יום גיבוש מושלם, חבילות, מבצע, אל תפספסו
+subheadline (required):
+- A tagline (6–10 Hebrew words max)
+- Connects to brand values: חיבור, משמעות, תרבות ארגונית
 
-personal_line:
-- Maximum 6 words, handwritten warmth, as if Tal is speaking
-- First person, genuine, not salesy
+benefits (required — VERY SHORT):
+- Exactly 3 items of MAXIMUM 2 WORDS each
+- These are core values shown in an oval on the photo (e.g. חיבור, שייכות, משמעות)
+- One or two words ONLY — no sentences
 
-subheadline:
-- 1 sentence, maximum 12 Hebrew words
-- Clear value proposition for this post type
+services (required):
+- Exactly 5 service labels (2–3 words each)
+- Prefer: ${postType.defaultServices.join(', ')}
 
-benefits:
-- Exactly 3 short Hebrew statements, maximum 6 words each
-- Use strong verbs or nouns to open each benefit
+image_description (required):
+- English scene for DALL-E photography prompt
+- Warm authentic Israeli corporate lifestyle, golden hour, real people
+- 1–2 sentences max
 
-services:
-- Exactly 4 service names (2-3 words each)
-- Prefer: ${postType.defaultServices.join(', ')} — adapt based on brief
-
-image_description:
-- English scene for DALL-E 3
-- Warm, authentic, Israeli corporate lifestyle photography
-- Real people connecting, golden hour, natural setting or elegant interior
-- Maximum 2 sentences
+theme (required):
+- Choose ONE that fits the emotional tone: "cream-pink" (warm/tip), "sage-gold" (nature/values), "ivory-rose" (story/inspiration), "dark-olive" (bold/campaign)
+- Suggested for this brief: "${randomTheme}"
 
 =================================
 OUTPUT: Valid JSON only — no text, no markdown
@@ -861,9 +818,10 @@ OUTPUT: Valid JSON only — no text, no markdown
   "headline": "",
   "personal_line": "",
   "subheadline": "",
-  "benefits": ["", "", ""],
-  "services": ["", "", "", ""],
-  "image_description": ""
+  "benefits": ["", ""],
+  "services": ["", "", "", "", ""],
+  "image_description": "",
+  "theme": ""
 }
 `
 
@@ -872,7 +830,7 @@ OUTPUT: Valid JSON only — no text, no markdown
       { role: 'system', content: buildSystemPrompt() },
       { role: 'user', content: userPrompt }
     ],
-    { temperature: 0.78, maxTokens: 700, jsonMode: true }
+    { temperature: 0.78, maxTokens: 700 }
   )
 
   try {

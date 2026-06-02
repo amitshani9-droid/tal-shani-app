@@ -13,6 +13,8 @@ vi.mock('../../services/storage', () => ({
     getDrafts:         vi.fn(() => []),
     getCalendar:       vi.fn(() => []),
     getResearch:       vi.fn(() => null),
+    getSyncedPosts:    vi.fn(() => []),
+    saveSyncedPosts:   vi.fn(),
   },
 }))
 

@@ -105,6 +105,15 @@ export const storage = {
       p.id === id ? { ...p, stats: { ...p.stats, ...stats } } : p
     )
     safeSet(KEYS.POSTS, JSON.stringify(posts))
+  },
+
+  // פוסטים מובילים ללמידת AI (מנוהלים בהגדרות)
+  getSyncedPosts() {
+    try { return JSON.parse(localStorage.getItem('tal_synced_posts') || '[]') }
+    catch { return [] }
+  },
+  saveSyncedPosts(posts) {
+    safeSet('tal_synced_posts', JSON.stringify(posts))
   }
 }
 

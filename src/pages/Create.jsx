@@ -41,13 +41,6 @@ const THEME_MAP_LOCAL = {
 
 const STEPS = { FORM: 'form', LOADING: 'loading', RESULT: 'result' }
 
-const PLATFORM_ACTIVE = {
-  instagram: { background: '#BE185D', border: '1px solid #BE185D' },
-  facebook:  { background: '#1D4ED8', border: '1px solid #1D4ED8' },
-  linkedin:  { background: '#0369A1', border: '1px solid #0369A1' },
-  all:       { background: 'var(--green-dark)', border: '1px solid var(--green-dark)' },
-}
-
 const getPlatformLabel = (id) => {
   if (id === 'instagram') return 'אינסטגרם'
   if (id === 'facebook') return 'פייסבוק'
@@ -107,6 +100,10 @@ export default function Create() {
   const [salesPostData, setSalesPostData] = useState(null)
   const [generatingSalesPost, setGeneratingSalesPost] = useState(false)
   const [salesPostError, setSalesPostError] = useState('')
+
+  // Collapsible result-step sections (collapsed by default)
+  const [showDesignSection, setShowDesignSection] = useState(false)
+  const [showSalesSectionResult, setShowSalesSectionResult] = useState(false)
 
   // Revoke blob URL on unmount to prevent memory leak
   useEffect(() => {
@@ -486,6 +483,8 @@ export default function Create() {
     setShowSalesPost(false)
     setSalesPostData(null)
     setSalesPostError('')
+    setShowDesignSection(false)
+    setShowSalesSectionResult(false)
   }
 
   if (step === STEPS.LOADING) {
@@ -723,13 +722,33 @@ export default function Create() {
           </div>
 
           {/* Image & Design Section */}
+          <div style={{ marginBottom: 20 }}>
+          <button
+            onClick={() => setShowDesignSection(s => !s)}
+            style={{
+              width: '100%', padding: '13px 16px',
+              background: showDesignSection ? 'var(--green-pale)' : 'var(--white)',
+              border: `1px solid ${showDesignSection ? 'var(--green-light)' : 'var(--border)'}`,
+              borderRadius: 'var(--radius-md)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              fontSize: 14, fontWeight: 600, color: 'var(--green-dark)',
+              boxShadow: 'var(--shadow-sm)', cursor: 'pointer', marginBottom: showDesignSection ? 12 : 0
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Palette size={16} /> 🎨 תמונה ועיצוב
+            </span>
+            <span style={{ fontSize: 12, color: 'var(--text-light)', fontWeight: 400 }}>
+              {showDesignSection ? '▲ סגרי' : '▼ פתחי'}
+            </span>
+          </button>
+          {showDesignSection && (
           <div style={{
             background: 'var(--white)',
             borderRadius: 'var(--radius-md)',
             border: '1px solid var(--border)',
             padding: 20,
             boxShadow: 'var(--shadow-sm)',
-            marginBottom: 20
           }} className="fade-in">
             <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-dark)', marginBottom: 12, textAlign: 'center' }}>
               בחרי תמונת רקע לעיצוב
@@ -1105,14 +1124,36 @@ export default function Create() {
               </div>
             )}
           </div>
+          )}
+          </div>
 
           {/* ── Sales Post Template Section ────────────────────────────────── */}
+          <div style={{ marginBottom: 20 }}>
+          <button
+            onClick={() => setShowSalesSectionResult(s => !s)}
+            style={{
+              width: '100%', padding: '13px 16px',
+              background: showSalesSectionResult ? 'rgba(194,24,106,0.07)' : 'var(--white)',
+              border: `1px solid ${showSalesSectionResult ? '#F0CBD8' : 'var(--border)'}`,
+              borderRadius: 'var(--radius-md)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              fontSize: 14, fontWeight: 600, color: '#C2186A',
+              boxShadow: 'var(--shadow-sm)', cursor: 'pointer', marginBottom: showSalesSectionResult ? 12 : 0
+            }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Layout size={16} /> 📣 פוסט מכירה ממותג
+            </span>
+            <span style={{ fontSize: 12, color: 'var(--text-light)', fontWeight: 400 }}>
+              {showSalesSectionResult ? '▲ סגרי' : '▼ פתחי'}
+            </span>
+          </button>
+          {showSalesSectionResult && (
           <div style={{
             background: 'var(--white)',
             borderRadius: 'var(--radius-md)',
             border: '1.5px solid #F0CBD8',
             padding: 20,
-            marginBottom: 20,
             boxShadow: 'var(--shadow-sm)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -1158,11 +1199,14 @@ export default function Create() {
                   subheadline={salesPostData.subheadline}
                   benefits={salesPostData.benefits}
                   services={salesPostData.services}
+                  theme={salesPostData.theme || 'cream-pink'}
                   onRegenerate={() => handleGenerateSalesPost(editedResult || brief)}
                   generatingContent={generatingSalesPost}
                 />
               </div>
             )}
+          </div>
+          )}
           </div>
 
           {/* Save Draft */}

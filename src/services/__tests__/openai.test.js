@@ -8,6 +8,9 @@ import {
   generateWeeklyPlan,
   generatePostImage,
   generateImageContent,
+  generateSalesPostContent,
+  generateWhatsAppMessage,
+  generateCampaign,
 } from '../openai'
 
 // ── helpers ──────────────────────────────────────────────
@@ -302,9 +305,9 @@ describe('generateResearch — markdown fence stripping', () => {
   })
 })
 
-// ── generatePostImage — b64_json response format ──────────
-describe('generatePostImage — b64_json request', () => {
-  it('sends response_format: b64_json in the DALL-E request', async () => {
+// ── generatePostImage — DALL-E request ───────────────────
+describe('generatePostImage — DALL-E request', () => {
+  it('sends model dall-e-3 in the DALL-E request', async () => {
     setApiKey('sk-test')
     let dalleBody
     vi.spyOn(global, 'fetch')
@@ -313,11 +316,12 @@ describe('generatePostImage — b64_json request', () => {
         dalleBody = JSON.parse(opts.body)
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ data: [{ b64_json: 'AAAA' }] })
+          json: () => Promise.resolve({ data: [{ url: 'https://img.example.com/1.png' }] })
         })
       })
     await generatePostImage('יום גיבוש מוצלח')
-    expect(dalleBody.response_format).toBe('b64_json')
+    expect(dalleBody.model).toBe('dall-e-3')
+    expect(dalleBody.response_format).toBeUndefined()
   })
 
   it('returns a data URI when response contains b64_json', async () => {
@@ -379,5 +383,204 @@ describe('generateImageContent — markdown fence stripping', () => {
     setApiKey('sk-test')
     vi.spyOn(global, 'fetch').mockResolvedValue(mockGPTResponse('```json\nNOT JSON\n```'))
     await expect(generateImageContent('פוסט')).rejects.toThrow('שגיאה בניתוח')
+  })
+})
+
+// ── generateSalesPostContent ──────────────────────────────
+describe('generateSalesPostContent', () => {
+  it('throws when API key is missing', async () => {
+    await expect(generateSalesPostContent({ brief: 'test' }))
+      .rejects.toThrow('חסר API Key')
+  })
+
+  it('parses and returns structured content data', async () => {
+    setApiKey('sk-test')
+    const payload = {
+      headline: 'חיבור אמיתי',
+      personal_line: 'כי אנשים מחוברים עובדים טוב יותר',
+      subheadline: 'בניית חוויות שמשאירות חותם',
+      benefits: ['חיבור עמוק', 'תרבות ארגונית', 'זיכרון משותף'],
+      services: ['ימי גיבוש', 'אירועי חברה', 'נופש חברה', 'כנסים'],
+      image_description: 'Team members laughing together at golden hour in Israel'
+    }
+    vi.spyOn(global, 'fetch').mockResolvedValue(mockGPTResponse(JSON.stringify(payload)))
+    const result = await generateSalesPostContent({ brief: 'גיבוש' })
+    expect(result.headline).toBe('חיבור אמיתי')
+    expect(result.benefits).toHaveLength(3)
+    expect(result.services).toHaveLength(4)
+  })
+
+  it('defaults to tip template when templateId is not provided', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse(JSON.stringify({ headline: '', personal_line: '', subheadline: '', benefits: [], services: [], image_description: '' })))
+    })
+    await generateSalesPostContent({ brief: 'test' })
+    const userMsg = capturedBody.messages.find(m => m.role === 'user').content
+    expect(userMsg).toContain('טיפ מקצועי')
+  })
+
+  it('uses the correct template name for "promotion" templateId', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse(JSON.stringify({ headline: '', personal_line: '', subheadline: '', benefits: [], services: [], image_description: '' })))
+    })
+    await generateSalesPostContent({ brief: 'test', templateId: 'promotion' })
+    const userMsg = capturedBody.messages.find(m => m.role === 'user').content
+    expect(userMsg).toContain('פוסט מכירה')
+  })
+
+  it('throws a friendly Hebrew error on invalid JSON response', async () => {
+    setApiKey('sk-test')
+    vi.spyOn(global, 'fetch').mockResolvedValue(mockGPTResponse('not valid json'))
+    await expect(generateSalesPostContent({ brief: 'test' })).rejects.toThrow('שגיאה בניתוח')
+  })
+
+  it('sends model gpt-4o in the request', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse(JSON.stringify({ headline: '', personal_line: '', subheadline: '', benefits: [], services: [], image_description: '' })))
+    })
+    await generateSalesPostContent({ brief: 'test', templateId: 'tip' })
+    expect(capturedBody.model).toBe('gpt-4o')
+    expect(capturedBody.response_format).toBeUndefined()
+  })
+})
+
+// ── generateWhatsAppMessage ───────────────────────────────
+describe('generateWhatsAppMessage', () => {
+  it('throws when API key is missing', async () => {
+    await expect(generateWhatsAppMessage({ type: 'intro' }))
+      .rejects.toThrow('חסר API Key')
+  })
+
+  it('returns a WhatsApp message string', async () => {
+    setApiKey('sk-test')
+    vi.spyOn(global, 'fetch').mockResolvedValue(mockGPTResponse('היי 🌿\n\nשמי טל שני, ואני עוסקת בחוויות ארגוניות עם ערך.\n\nשמחה להכיר!'))
+    const result = await generateWhatsAppMessage({ type: 'intro' })
+    expect(typeof result).toBe('string')
+    expect(result.length).toBeGreaterThan(0)
+  })
+
+  it('uses the correct instruction for each message type', async () => {
+    setApiKey('sk-test')
+    const types = ['intro', 'followup', 'offer', 'thanks', 'reminder']
+    for (const type of types) {
+      let capturedBody
+      vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+        capturedBody = JSON.parse(opts.body)
+        return Promise.resolve(mockGPTResponse('הודעה'))
+      })
+      await generateWhatsAppMessage({ type })
+      const userMsg = capturedBody.messages.find(m => m.role === 'user').content
+      expect(typeof userMsg).toBe('string')
+      expect(userMsg.length).toBeGreaterThan(0)
+      vi.restoreAllMocks()
+    }
+  })
+
+  it('includes the recipient name when provided', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse('הודעה'))
+    })
+    await generateWhatsAppMessage({ type: 'intro', recipientName: 'מיכל' })
+    const userMsg = capturedBody.messages.find(m => m.role === 'user').content
+    expect(userMsg).toContain('מיכל')
+  })
+
+  it('includes additional context when provided', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse('הודעה'))
+    })
+    await generateWhatsAppMessage({ type: 'followup', context: 'פגשנו בכנס HR' })
+    const userMsg = capturedBody.messages.find(m => m.role === 'user').content
+    expect(userMsg).toContain('פגשנו בכנס HR')
+  })
+})
+
+// ── generateCampaign ──────────────────────────────────────
+describe('generateCampaign', () => {
+  it('throws when API key is missing', async () => {
+    await expect(generateCampaign({ theme: 'גיבוש', audience: '', goal: '' }))
+      .rejects.toThrow('חסר API Key')
+  })
+
+  it('parses and returns a full campaign object', async () => {
+    setApiKey('sk-test')
+    const payload = {
+      campaignName: 'חיבור שמתחיל מהלב',
+      bigIdea: 'גיבוש שמחזק את מה שכבר קיים',
+      email: {
+        subject: 'הצוות שלך ראוי ליותר מיום גיבוש רגיל',
+        preheader: 'כי חיבור אמיתי מתחיל בהבנה',
+        body: 'שלום,\n\nאני טל שני...',
+        cta: 'בואי נדבר'
+      },
+      landingPage: {
+        headline: 'חוויה ארגונית שמשאירה חותם',
+        subheadline: 'לא יום גיבוש. חוויה שמחברת.',
+        valuePoints: [
+          { title: 'חיבור עמוק', desc: 'עובדים שמרגישים שייכים' },
+          { title: 'תוצאות מדידות', desc: 'פחות תחלופה, יותר מחויבות' },
+          { title: 'מותאם אישית', desc: 'כל חוויה בנויה עבורכם' }
+        ],
+        socialProof: 'עבדנו עם Intel, בנק הפועלים ועוד',
+        primaryCta: 'בואי נדבר',
+        secondaryCta: 'קראי עוד'
+      },
+      instagramPost: 'כשצוות מרגיש שייך...',
+      whatsappTeaser: 'היי 🌿\n\nרציתי לשתף...'
+    }
+    vi.spyOn(global, 'fetch').mockResolvedValue(mockGPTResponse(JSON.stringify(payload)))
+    const result = await generateCampaign({ theme: 'גיבוש', audience: 'HR', goal: 'פניות' })
+    expect(result.campaignName).toBe('חיבור שמתחיל מהלב')
+    expect(result.email.subject).toBeDefined()
+    expect(result.landingPage.valuePoints).toHaveLength(3)
+    expect(typeof result.instagramPost).toBe('string')
+  })
+
+  it('includes the theme in the user prompt', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    const payload = { campaignName: '', bigIdea: '', email: { subject: '', preheader: '', body: '', cta: '' }, landingPage: { headline: '', subheadline: '', valuePoints: [], socialProof: '', primaryCta: '', secondaryCta: '' }, instagramPost: '', whatsappTeaser: '' }
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse(JSON.stringify(payload)))
+    })
+    await generateCampaign({ theme: 'בניית קהילה', audience: '', goal: '' })
+    const userMsg = capturedBody.messages.find(m => m.role === 'user').content
+    expect(userMsg).toContain('בניית קהילה')
+  })
+
+  it('throws a friendly Hebrew error on invalid JSON response', async () => {
+    setApiKey('sk-test')
+    vi.spyOn(global, 'fetch').mockResolvedValue(mockGPTResponse('not json'))
+    await expect(generateCampaign({ theme: 'test', audience: '', goal: '' }))
+      .rejects.toThrow('שגיאה בניתוח')
+  })
+
+  it('sends model gpt-4o in the request', async () => {
+    setApiKey('sk-test')
+    let capturedBody
+    const payload = { campaignName: '', bigIdea: '', email: {}, landingPage: {}, instagramPost: '', whatsappTeaser: '' }
+    vi.spyOn(global, 'fetch').mockImplementation((_url, opts) => {
+      capturedBody = JSON.parse(opts.body)
+      return Promise.resolve(mockGPTResponse(JSON.stringify(payload)))
+    })
+    await generateCampaign({ theme: 'test', audience: '', goal: '' })
+    expect(capturedBody.model).toBe('gpt-4o')
+    expect(capturedBody.response_format).toBeUndefined()
   })
 })

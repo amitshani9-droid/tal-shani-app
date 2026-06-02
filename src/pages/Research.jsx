@@ -342,7 +342,7 @@ export default function Research() {
                       className="badge badge-green"
                       style={{ fontSize: 11, padding: '5px 12px', cursor: 'pointer' }}
                       onClick={() => {
-                        navigator.clipboard.writeText('#' + h.replace(/^#/, ''))
+                        navigator.clipboard.writeText('#' + h.replace(/^#/, '')).catch(() => {})
                       }}
                       title="לחצי להעתקה"
                     >

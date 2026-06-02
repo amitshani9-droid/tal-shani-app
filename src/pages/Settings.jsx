@@ -18,10 +18,7 @@ export default function Settings() {
   const importRef = useRef(null)
 
   // Smart Learning examples — user-curated top-performing posts that train the AI
-  const [syncedPosts, setSyncedPosts] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('tal_synced_posts') || '[]') }
-    catch { return [] }
-  })
+  const [syncedPosts, setSyncedPosts] = useState(() => storage.getSyncedPosts())
 
   const [newPostContent, setNewPostContent] = useState('')
   const [newPostLikes, setNewPostLikes] = useState(50)
@@ -40,7 +37,7 @@ export default function Settings() {
     }
     const updated = [newPost, ...syncedPosts]
     setSyncedPosts(updated)
-    localStorage.setItem('tal_synced_posts', JSON.stringify(updated))
+    storage.saveSyncedPosts(updated)
     setNewPostContent('')
     setShowAddForm(false)
   }
@@ -48,7 +45,7 @@ export default function Settings() {
   function handleDeletePost(index) {
     const updated = syncedPosts.filter((_, idx) => idx !== index)
     setSyncedPosts(updated)
-    localStorage.setItem('tal_synced_posts', JSON.stringify(updated))
+    storage.saveSyncedPosts(updated)
   }
 
   function handleStartEdit(index) {
@@ -67,7 +64,7 @@ export default function Settings() {
       stats: { likes: Number(editLikes) || 0, comments: Number(editComments) || 0 }
     }
     setSyncedPosts(updated)
-    localStorage.setItem('tal_synced_posts', JSON.stringify(updated))
+    storage.saveSyncedPosts(updated)
     setEditingIndex(null)
   }
 

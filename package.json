@@ -3,12 +3,36 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "electron:build": "vite build && electron-builder"
+  },
+  "build": {
+    "appId": "com.talshani.social",
+    "productName": "טל שני",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "public/logo.png"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": [
+        "he"
+      ],
+      "language": "1037"
+    }
   },
   "dependencies": {
     "html-to-image": "^1.11.13",
@@ -25,6 +49,7 @@
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.0",
     "concurrently": "^10.0.3",
+    "cross-env": "^10.1.0",
     "electron": "^42.3.1",
     "electron-builder": "^26.8.1",
     "jsdom": "^29.1.1",

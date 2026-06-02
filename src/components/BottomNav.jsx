@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Home, PlusSquare, BookOpen, TrendingUp, Clock, Zap, BarChart3, MessageCircle } from 'lucide-react'
+import { Home, PlusSquare, BookOpen, TrendingUp, Clock, Zap, BarChart3, MessageCircle, Settings as SettingsIcon } from 'lucide-react'
 
 const tabs = [
   { path: '/',              icon: Home,          label: 'ראשי' },

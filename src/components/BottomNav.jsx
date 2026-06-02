@@ -1,13 +1,15 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Home, PlusSquare, BookOpen, TrendingUp, Calendar, Clock, Settings as SettingsIcon, Zap } from 'lucide-react'
+import { Home, PlusSquare, BookOpen, TrendingUp, Clock, Zap, BarChart3, MessageCircle } from 'lucide-react'
 
 const tabs = [
-  { path: '/',              icon: Home,       label: 'ראשי' },
-  { path: '/brand',         icon: BookOpen,   label: 'מותג' },
-  { path: '/brand-engine',  icon: Zap,        label: 'מנוע מותג' },
-  { path: '/create',        icon: PlusSquare, label: 'פוסט' },
-  { path: '/research',      icon: TrendingUp, label: 'מחקר' },
-  { path: '/history',       icon: Clock,      label: 'ארכיון' },
+  { path: '/',              icon: Home,          label: 'ראשי' },
+  { path: '/brand-engine',  icon: Zap,           label: 'מנוע מותג' },
+  { path: '/create',        icon: PlusSquare,    label: 'פוסט' },
+  { path: '/research',      icon: TrendingUp,    label: 'מחקר' },
+  { path: '/history',       icon: Clock,         label: 'ארכיון' },
+  { path: '/analytics',     icon: BarChart3,     label: 'אנליטיקס' },
+  { path: '/whatsapp',      icon: MessageCircle, label: 'וואצאפ' },
+  { path: '/brand',         icon: BookOpen,      label: 'מותג' },
 ]
 
 export default function BottomNav() {

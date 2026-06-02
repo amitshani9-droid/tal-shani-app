@@ -31,8 +31,8 @@ export default function CalendarPage() {
 
   function getItemsForDay(day) {
     return calItems.filter(item => {
-      const d = new Date(item.scheduledFor)
-      return d.getFullYear() === year && d.getMonth() === month && d.getDate() === day
+      const [y, m, d] = item.scheduledFor.split('-').map(Number)
+      return y === year && m - 1 === month && d === day
     })
   }
 

@@ -309,13 +309,19 @@ export default function Create() {
     }
   }
 
+  const CONTENT_TYPE_TO_TEMPLATE = {
+    tip: 'tip', sale: 'promotion', behind: 'behind',
+    question: 'inspiration', casestudy: 'case_study',
+  }
+
   // ─── Sales Post Template handler ─────────────────────────────────────────
   async function handleGenerateSalesPost(briefText) {
     setGeneratingSalesPost(true)
     setSalesPostError('')
     setShowSalesPost(true)
     try {
-      const data = await generateSalesPostContent({ brief: briefText || brief })
+      const templateId = CONTENT_TYPE_TO_TEMPLATE[contentType] || 'tip'
+      const data = await generateSalesPostContent({ brief: briefText || brief, templateId })
       setSalesPostData(data)
     } catch (e) {
       setSalesPostError(e.message)

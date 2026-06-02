@@ -1,0 +1,143 @@
+<h2>כותרות — אופי מול ניקיון?</h2>
+<p class="subtitle">זה ההבדל בין "כלי עסקי" ל"מותג עם אישיות". איזה מרגיש נכון?</p>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Heebo:wght@300;400;500;600;700;800&display=swap');
+
+.typo-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+@media (max-width: 700px) { .typo-split { grid-template-columns: 1fr; } }
+
+.typo-card {
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+.typo-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.13); }
+.typo-card.selected { border-color: #4A90E2 !important; }
+.sel-badge { display: none; background: #4A90E2; color: white; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin-top: 8px; }
+.typo-card.selected .sel-badge { display: inline-block; }
+
+/* ---- Option A: With Playfair (personality) ---- */
+.mock-playfair {
+  background: #fff;
+  font-family: 'Heebo', sans-serif;
+  direction: rtl;
+}
+.mpl-header {
+  background: linear-gradient(135deg, #4A5C42 0%, #3A4A34 100%);
+  padding: 28px 20px 24px;
+}
+.mpl-date { font-size: 11px; color: rgba(143,175,135,0.85); font-family: 'Heebo', sans-serif; font-weight: 400; margin-bottom: 6px; letter-spacing: 0.5px; }
+.mpl-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 400; color: #fff; font-style: italic; line-height: 1.2; }
+.mpl-sub { font-family: 'Heebo', sans-serif; font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px; font-weight: 300; }
+.mpl-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px; }
+.mpl-stat { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px 10px; text-align: center; }
+.mpl-num { font-size: 22px; font-weight: 700; color: #4A5C42; font-family: 'Heebo', sans-serif; }
+.mpl-lbl { font-size: 10px; color: #9CA3AF; margin-top: 3px; }
+.mpl-btn { margin: 0 16px 16px; background: #4A5C42; border-radius: 10px; padding: 14px; text-align: center; color: white; font-weight: 600; font-size: 13px; font-family: 'Heebo', sans-serif; }
+.mpl-section-title { font-family: 'Playfair Display', serif; font-size: 14px; color: #4A5C42; padding: 0 16px 8px; font-style: italic; }
+.mpl-item { margin: 0 16px 8px; background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; }
+.mpl-item-line { height: 7px; background: #F3F4F6; border-radius: 4px; margin-bottom: 5px; }
+.mpl-item-line.w75 { width: 75%; }
+
+/* ---- Option B: Full Heebo (clean SaaS) ---- */
+.mock-heebo {
+  background: #fff;
+  font-family: 'Heebo', sans-serif;
+  direction: rtl;
+}
+.mhb-header {
+  background: linear-gradient(135deg, #4A5C42 0%, #3A4A34 100%);
+  padding: 28px 20px 24px;
+}
+.mhb-date { font-size: 11px; color: rgba(143,175,135,0.85); font-weight: 400; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+.mhb-title { font-size: 26px; font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -0.5px; }
+.mhb-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px; font-weight: 300; }
+.mhb-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px; }
+.mhb-stat { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px 10px; text-align: center; }
+.mhb-num { font-size: 22px; font-weight: 800; color: #111827; }
+.mhb-lbl { font-size: 10px; color: #9CA3AF; margin-top: 3px; }
+.mhb-btn { margin: 0 16px 16px; background: #4A5C42; border-radius: 10px; padding: 14px; text-align: center; color: white; font-weight: 700; font-size: 13px; letter-spacing: 0.2px; }
+.mhb-section-title { font-size: 10px; font-weight: 700; color: #9CA3AF; padding: 0 16px 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+.mhb-item { margin: 0 16px 8px; background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px; }
+.mhb-item-line { height: 7px; background: #F3F4F6; border-radius: 4px; margin-bottom: 5px; }
+.mhb-item-line.w75 { width: 75%; }
+
+.typo-label { padding: 14px 16px; background: #fff; border-top: 1px solid #F3F4F6; }
+.typo-label-title { font-size: 14px; font-weight: 700; color: #111; }
+.typo-label-sub { font-size: 11px; color: #777; margin-top: 3px; line-height: 1.5; }
+.typo-tags { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+.typo-tag { font-size: 10px; background: #f4f4f4; color: #555; padding: 3px 8px; border-radius: 5px; }
+</style>
+
+<div class="typo-split">
+
+  <!-- Option A: Playfair + Heebo (personality) -->
+  <div class="typo-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="mock-playfair">
+      <div class="mpl-header">
+        <div class="mpl-date">ראשון, 1 ביוני</div>
+        <div class="mpl-title">שלום טל 👋</div>
+        <div class="mpl-sub">מה נפרסם מדהים היום?</div>
+      </div>
+      <div class="mpl-stats">
+        <div class="mpl-stat"><div class="mpl-num">12</div><div class="mpl-lbl">פוסטים</div></div>
+        <div class="mpl-stat"><div class="mpl-num">5</div><div class="mpl-lbl">טיוטות</div></div>
+        <div class="mpl-stat"><div class="mpl-num">3</div><div class="mpl-lbl">מתוזמן</div></div>
+      </div>
+      <div class="mpl-btn">✨ צרי פוסט חדש</div>
+      <div class="mpl-section-title">פורסם לאחרונה</div>
+      <div class="mpl-item"><div class="mpl-item-line"></div><div class="mpl-item-line w75"></div></div>
+      <div class="mpl-item"><div class="mpl-item-line"></div><div class="mpl-item-line w75"></div></div>
+    </div>
+    <div class="typo-label">
+      <div class="typo-label-title">A — Playfair + Heebo</div>
+      <div class="typo-label-sub">כותרות באיטליק אלגנטי, גוף טקסט נקי. מרגיש כמו מותג אמיתי עם אישיות.</div>
+      <div class="typo-tags">
+        <span class="typo-tag">אלגנטי</span>
+        <span class="typo-tag">עם אופי</span>
+        <span class="typo-tag">נשי</span>
+      </div>
+      <div class="sel-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+  <!-- Option B: Heebo only (clean SaaS) -->
+  <div class="typo-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="mock-heebo">
+      <div class="mhb-header">
+        <div class="mhb-date">ראשון, 1 ביוני</div>
+        <div class="mhb-title">שלום טל 👋</div>
+        <div class="mhb-sub">מה נפרסם מדהים היום?</div>
+      </div>
+      <div class="mhb-stats">
+        <div class="mhb-stat"><div class="mhb-num">12</div><div class="mhb-lbl">פוסטים</div></div>
+        <div class="mhb-stat"><div class="mhb-num">5</div><div class="mhb-lbl">טיוטות</div></div>
+        <div class="mhb-stat"><div class="mhb-num">3</div><div class="mhb-lbl">מתוזמן</div></div>
+      </div>
+      <div class="mhb-btn">✨ צרי פוסט חדש</div>
+      <div class="mhb-section-title">פורסם לאחרונה</div>
+      <div class="mhb-item"><div class="mhb-item-line"></div><div class="mhb-item-line w75"></div></div>
+      <div class="mhb-item"><div class="mhb-item-line"></div><div class="mhb-item-line w75"></div></div>
+    </div>
+    <div class="typo-label">
+      <div class="typo-label-title">B — Heebo בלבד</div>
+      <div class="typo-label-sub">פונט אחד, משקלים שונים. נקי, חד, ישיר. מרגיש כמו Notion או Linear.</div>
+      <div class="typo-tags">
+        <span class="typo-tag">נקי</span>
+        <span class="typo-tag">SaaS</span>
+        <span class="typo-tag">מינימליסט</span>
+      </div>
+      <div class="sel-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+</div>

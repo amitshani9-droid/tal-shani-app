@@ -1,0 +1,235 @@
+<h2>איזה כיוון עיצובי מרגיש נכון?</h2>
+<p class="subtitle">3 גישות שונות לאפליקציה מקצועית של טל שני — לחצי על הכרטיס שמושך אותך</p>
+
+<style>
+  .dir-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+  @media (max-width: 900px) {
+    .dir-cards { grid-template-columns: 1fr; }
+  }
+  .dir-card {
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2.5px solid transparent;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+  .dir-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.18); }
+  .dir-card.selected { border-color: #4A90E2 !important; }
+
+  /* ---- Option A: Dark Premium ---- */
+  .mock-a { background: #0F1A0D; font-family: 'Segoe UI', sans-serif; direction: rtl; }
+  .mock-a-nav { background: #0F1A0D; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,183,128,0.15); }
+  .mock-a-logo { font-size: 15px; font-weight: 700; color: #D4B780; letter-spacing: 1px; }
+  .mock-a-dots { display: flex; gap: 6px; }
+  .mock-a-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(212,183,128,0.35); }
+  .mock-a-dot.active { background: #D4B780; }
+  .mock-a-header { padding: 28px 20px 20px; background: linear-gradient(160deg, #1A2E16 0%, #0F1A0D 100%); }
+  .mock-a-greeting { font-size: 22px; font-weight: 300; color: #F5EDD8; font-style: italic; letter-spacing: -0.5px; }
+  .mock-a-sub { font-size: 11px; color: rgba(212,183,128,0.6); margin-top: 4px; }
+  .mock-a-gold-line { height: 1.5px; background: linear-gradient(90deg, #D4B780 0%, transparent 100%); margin: 16px 0; opacity: 0.4; }
+  .mock-a-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; }
+  .mock-a-stat { background: rgba(212,183,128,0.06); border: 1px solid rgba(212,183,128,0.12); border-radius: 10px; padding: 14px 10px; text-align: center; }
+  .mock-a-num { font-size: 22px; font-weight: 700; color: #D4B780; }
+  .mock-a-label { font-size: 9px; color: rgba(245,237,216,0.45); margin-top: 3px; }
+  .mock-a-action { margin: 16px 20px 8px; background: linear-gradient(135deg, #D4B780, #A88B4E); border-radius: 12px; padding: 14px; text-align: center; color: #0F1A0D; font-weight: 700; font-size: 13px; }
+  .mock-a-card { margin: 0 20px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,183,128,0.1); border-radius: 12px; padding: 14px; }
+  .mock-a-card-title { font-size: 11px; color: rgba(212,183,128,0.7); margin-bottom: 8px; }
+  .mock-a-line { height: 6px; border-radius: 3px; background: rgba(212,183,128,0.12); margin-bottom: 5px; }
+  .mock-a-line.w80 { width: 80%; }
+  .mock-a-line.w60 { width: 60%; }
+
+  /* ---- Option B: Clean Glass ---- */
+  .mock-b { background: #F8F9FB; font-family: 'Segoe UI', sans-serif; direction: rtl; }
+  .mock-b-header { background: #fff; padding: 20px; border-bottom: 1px solid #EAECF0; display: flex; justify-content: space-between; align-items: center; }
+  .mock-b-logo { font-size: 16px; font-weight: 800; color: #101828; letter-spacing: -0.5px; }
+  .mock-b-logo span { color: #2D7A3C; }
+  .mock-b-badge { background: #ECFDF3; color: #027A48; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 999px; border: 1px solid #ABEFC6; }
+  .mock-b-hero { background: linear-gradient(135deg, #2D7A3C 0%, #1A5E2A 100%); padding: 28px 20px; }
+  .mock-b-hero-title { font-size: 22px; font-weight: 700; color: #fff; }
+  .mock-b-hero-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+  .mock-b-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px; }
+  .mock-b-stat { background: #fff; border: 1px solid #EAECF0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  .mock-b-stat-num { font-size: 22px; font-weight: 700; color: #101828; }
+  .mock-b-stat-label { font-size: 9px; color: #667085; margin-top: 2px; }
+  .mock-b-stat-delta { font-size: 9px; color: #027A48; background: #ECFDF3; padding: 1px 5px; border-radius: 4px; margin-top: 4px; display: inline-block; }
+  .mock-b-action { margin: 0 16px; background: #101828; border-radius: 12px; padding: 14px; text-align: center; color: #fff; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .mock-b-action-icon { width: 18px; height: 18px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .mock-b-cards { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .mock-b-item { background: #fff; border: 1px solid #EAECF0; border-radius: 10px; padding: 12px; display: flex; gap: 10px; align-items: center; }
+  .mock-b-item-dot { width: 8px; height: 8px; border-radius: 50%; background: #2D7A3C; flex-shrink: 0; }
+  .mock-b-item-line { flex: 1; height: 6px; border-radius: 3px; background: #F2F4F7; }
+  .mock-b-item-line.w70 { width: 70%; }
+  .mock-b-item-tag { font-size: 9px; color: #667085; background: #F9FAFB; padding: 2px 7px; border-radius: 4px; border: 1px solid #EAECF0; white-space: nowrap; }
+
+  /* ---- Option C: Rich Warm Premium ---- */
+  .mock-c { background: #FAF6F2; font-family: 'Segoe UI', sans-serif; direction: rtl; }
+  .mock-c-header { background: linear-gradient(135deg, #3D4F36 0%, #2A3824 50%, #1E2B1A 100%); padding: 28px 20px 36px; position: relative; overflow: hidden; }
+  .mock-c-orb1 { position: absolute; top: -30px; left: -30px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(143,175,135,0.25) 0%, transparent 70%); }
+  .mock-c-orb2 { position: absolute; bottom: -20px; right: -10px; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle, rgba(184,137,110,0.2) 0%, transparent 70%); }
+  .mock-c-label { font-size: 10px; color: rgba(143,175,135,0.8); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .mock-c-title { font-size: 26px; font-weight: 300; color: #FAF6F2; font-style: italic; letter-spacing: -0.5px; }
+  .mock-c-sub { font-size: 11px; color: rgba(250,246,242,0.5); margin-top: 4px; }
+  .mock-c-glass { position: absolute; bottom: -18px; left: 20px; right: 20px; background: rgba(255,255,255,0.07); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px 16px; display: flex; gap: 0; }
+  .mock-c-glass-stat { flex: 1; text-align: center; }
+  .mock-c-glass-stat + .mock-c-glass-stat { border-right: 1px solid rgba(255,255,255,0.12); }
+  .mock-c-glass-num { font-size: 20px; font-weight: 700; color: #fff; }
+  .mock-c-glass-lbl { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .mock-c-body { padding: 36px 16px 12px; }
+  .mock-c-cta { background: linear-gradient(135deg, #4A5C42, #6B7F63); border-radius: 14px; padding: 16px; color: white; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .mock-c-cta-arrow { width: 28px; height: 28px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .mock-c-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .mock-c-mini { background: #fff; border: 1px solid #EDE5DF; border-radius: 12px; padding: 12px; box-shadow: 0 2px 8px rgba(74,92,66,0.05); }
+  .mock-c-mini-icon { width: 28px; height: 28px; border-radius: 8px; background: #E4ECE1; margin-bottom: 8px; }
+  .mock-c-mini-line { height: 6px; border-radius: 3px; background: #EDE5DF; margin-bottom: 4px; }
+  .mock-c-mini-line.w70 { width: 70%; }
+  .mock-c-recent { background: #fff; border: 1px solid #EDE5DF; border-radius: 12px; padding: 14px; }
+  .mock-c-recent-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .mock-c-recent-title { font-size: 11px; font-weight: 700; color: #2C3528; text-transform: uppercase; letter-spacing: 0.5px; }
+  .mock-c-recent-link { font-size: 9px; color: #8FAF87; }
+  .mock-c-post { padding: 8px 0; border-bottom: 1px solid #F5EEE9; display: flex; gap: 8px; }
+  .mock-c-post:last-child { border-bottom: none; }
+  .mock-c-post-pill { font-size: 8px; background: #E4ECE1; color: #4A5C42; padding: 2px 7px; border-radius: 999px; white-space: nowrap; height: fit-content; }
+  .mock-c-post-line { flex: 1; }
+  .mock-c-post-text { height: 6px; border-radius: 3px; background: #EDE5DF; margin-bottom: 3px; }
+  .mock-c-post-text.w60 { width: 60%; }
+
+  /* card label */
+  .dir-label { padding: 14px 16px; background: #fff; border-top: 1px solid #f0f0f0; }
+  .dir-label-title { font-size: 14px; font-weight: 700; color: #111; }
+  .dir-label-sub { font-size: 11px; color: #777; margin-top: 2px; }
+  .dir-label-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .dir-tag { font-size: 10px; background: #f4f4f4; color: #555; padding: 3px 8px; border-radius: 5px; }
+  .selected-badge { display: none; background: #4A90E2; color: white; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin-top: 6px; }
+  .dir-card.selected .selected-badge { display: inline-block; }
+</style>
+
+<div class="dir-cards">
+
+  <!-- Option A: Dark Premium -->
+  <div class="dir-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="mock-a">
+      <div class="mock-a-nav">
+        <div class="mock-a-logo">טל שני ✦</div>
+        <div class="mock-a-dots">
+          <div class="mock-a-dot active"></div>
+          <div class="mock-a-dot"></div>
+          <div class="mock-a-dot"></div>
+          <div class="mock-a-dot"></div>
+        </div>
+      </div>
+      <div class="mock-a-header">
+        <div class="mock-a-sub">ראשון, 1 ביוני</div>
+        <div class="mock-a-greeting">שלום טל 👋</div>
+        <div class="mock-a-gold-line"></div>
+      </div>
+      <div class="mock-a-stats">
+        <div class="mock-a-stat"><div class="mock-a-num">12</div><div class="mock-a-label">פוסטים</div></div>
+        <div class="mock-a-stat"><div class="mock-a-num">5</div><div class="mock-a-label">טיוטות</div></div>
+        <div class="mock-a-stat"><div class="mock-a-num">3</div><div class="mock-a-label">מתוזמן</div></div>
+      </div>
+      <div class="mock-a-action">✦ צרי פוסט חדש</div>
+      <div class="mock-a-card">
+        <div class="mock-a-card-title">פורסם לאחרונה</div>
+        <div class="mock-a-line w80"></div>
+        <div class="mock-a-line w60"></div>
+      </div>
+    </div>
+    <div class="dir-label">
+      <div class="dir-label-title">A — Dark Luxury</div>
+      <div class="dir-label-sub">רקע כהה, זהב, אלגנטיות מקסימלית</div>
+      <div class="dir-label-tags">
+        <span class="dir-tag">פרימיום</span>
+        <span class="dir-tag">כהה</span>
+        <span class="dir-tag">זהב</span>
+        <span class="dir-tag">דרמטי</span>
+      </div>
+      <div class="selected-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+  <!-- Option B: Clean Glass SaaS -->
+  <div class="dir-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="mock-b">
+      <div class="mock-b-header">
+        <div class="mock-b-logo">טל <span>שני</span></div>
+        <div class="mock-b-badge">✦ פרימיום</div>
+      </div>
+      <div class="mock-b-hero">
+        <div class="mock-b-hero-title">שלום טל 👋</div>
+        <div class="mock-b-hero-sub">מה נפרסם מדהים היום?</div>
+      </div>
+      <div class="mock-b-grid">
+        <div class="mock-b-stat"><div class="mock-b-stat-num">12</div><div class="mock-b-stat-label">פוסטים</div><div class="mock-b-stat-delta">↑ 3 השבוע</div></div>
+        <div class="mock-b-stat"><div class="mock-b-stat-num">5</div><div class="mock-b-stat-label">טיוטות</div></div>
+        <div class="mock-b-stat"><div class="mock-b-stat-num">3</div><div class="mock-b-stat-label">מתוזמן</div></div>
+      </div>
+      <div class="mock-b-action"><div class="mock-b-action-icon"></div>צרי פוסט חדש</div>
+      <div class="mock-b-cards">
+        <div class="mock-b-item"><div class="mock-b-item-dot"></div><div class="mock-b-item-line"></div><div class="mock-b-item-tag">אינסטגרם</div></div>
+        <div class="mock-b-item"><div class="mock-b-item-dot" style="background:#B8896E"></div><div class="mock-b-item-line w70"></div><div class="mock-b-item-tag">לינקדאין</div></div>
+      </div>
+    </div>
+    <div class="dir-label">
+      <div class="dir-label-title">B — Clean SaaS</div>
+      <div class="dir-label-sub">לבן, נקי, מקצועי כמו כלי B2B מוביל</div>
+      <div class="dir-label-tags">
+        <span class="dir-tag">בהיר</span>
+        <span class="dir-tag">מינימליסט</span>
+        <span class="dir-tag">עסקי</span>
+        <span class="dir-tag">נקי</span>
+      </div>
+      <div class="selected-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+  <!-- Option C: Rich Warm Premium (evolved current) -->
+  <div class="dir-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="mock-c">
+      <div class="mock-c-header">
+        <div class="mock-c-orb1"></div>
+        <div class="mock-c-orb2"></div>
+        <div class="mock-c-label">סטודיו טל שני</div>
+        <div class="mock-c-title">שלום טל 👋</div>
+        <div class="mock-c-sub">מה נפרסם מדהים היום?</div>
+        <div class="mock-c-glass">
+          <div class="mock-c-glass-stat"><div class="mock-c-glass-num">12</div><div class="mock-c-glass-lbl">פוסטים</div></div>
+          <div class="mock-c-glass-stat"><div class="mock-c-glass-num">5</div><div class="mock-c-glass-lbl">טיוטות</div></div>
+          <div class="mock-c-glass-stat"><div class="mock-c-glass-num">3</div><div class="mock-c-glass-lbl">מתוזמן</div></div>
+        </div>
+      </div>
+      <div class="mock-c-body">
+        <div class="mock-c-cta">
+          ✨ צרי פוסט חדש
+          <div class="mock-c-cta-arrow">←</div>
+        </div>
+        <div class="mock-c-cards">
+          <div class="mock-c-mini"><div class="mock-c-mini-icon"></div><div class="mock-c-mini-line"></div><div class="mock-c-mini-line w70"></div></div>
+          <div class="mock-c-mini"><div class="mock-c-mini-icon" style="background:#FBEFEA"></div><div class="mock-c-mini-line"></div><div class="mock-c-mini-line w70"></div></div>
+        </div>
+        <div class="mock-c-recent">
+          <div class="mock-c-recent-top"><div class="mock-c-recent-title">פורסם לאחרונה</div><div class="mock-c-recent-link">ראי הכל</div></div>
+          <div class="mock-c-post"><div class="mock-c-post-pill">אינסטגרם</div><div class="mock-c-post-line"><div class="mock-c-post-text"></div><div class="mock-c-post-text w60"></div></div></div>
+          <div class="mock-c-post"><div class="mock-c-post-pill" style="background:#FBEFEA;color:#B8896E">לינקדאין</div><div class="mock-c-post-line"><div class="mock-c-post-text"></div><div class="mock-c-post-text w60"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="dir-label">
+      <div class="dir-label-title">C — Warm Premium</div>
+      <div class="dir-label-sub">גרסה מעודנת של הפלטה הנוכחית עם Glass UI</div>
+      <div class="dir-label-tags">
+        <span class="dir-tag">ירוק עמוק</span>
+        <span class="dir-tag">חמים</span>
+        <span class="dir-tag">Glassmorphism</span>
+        <span class="dir-tag">אורגני</span>
+      </div>
+      <div class="selected-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+</div>

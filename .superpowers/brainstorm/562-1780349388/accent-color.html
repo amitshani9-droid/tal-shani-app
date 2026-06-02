@@ -1,0 +1,176 @@
+<h2>איזה גוון ירוק מרגיש נכון למותג?</h2>
+<p class="subtitle">בתוך הכיוון Clean SaaS — הירוק הוא נקודת האופי. איזה גוון מייצג הכי טוב את טל שני?</p>
+
+<style>
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+@media (max-width: 768px) { .color-grid { grid-template-columns: 1fr; } }
+
+.color-card {
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  background: #fff;
+}
+.color-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.14); }
+.color-card.selected { border-color: #4A90E2 !important; }
+
+.color-swatch {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.color-preview {
+  padding: 16px;
+  background: #F8F9FB;
+  font-family: 'Segoe UI', sans-serif;
+  direction: rtl;
+  border-top: 1px solid #EAECF0;
+  border-bottom: 1px solid #EAECF0;
+}
+.mini-header {
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mini-btn {
+  border-radius: 7px;
+  padding: 8px 14px;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.mini-badge {
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-block;
+}
+.mini-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #EAECF0;
+  padding: 10px;
+  font-size: 11px;
+  color: #667085;
+}
+.mini-num { font-size: 22px; font-weight: 700; }
+
+.color-info { padding: 14px 16px; }
+.color-name { font-size: 14px; font-weight: 700; color: #111; }
+.color-desc { font-size: 11px; color: #777; margin-top: 3px; line-height: 1.5; }
+.color-tags { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+.color-tag { font-size: 10px; background: #f4f4f4; color: #555; padding: 3px 8px; border-radius: 5px; }
+.sel-badge { display: none; background: #4A90E2; color: white; font-size: 10px; padding: 2px 8px; border-radius: 5px; margin-top: 6px; }
+.color-card.selected .sel-badge { display: inline-block; }
+</style>
+
+<div class="color-grid">
+
+  <!-- Option A: Forest Deep -->
+  <div class="color-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="color-swatch" style="background: linear-gradient(135deg, #1B4332, #2D6A4F)">🌲</div>
+    <div class="color-preview">
+      <div class="mini-header" style="background: linear-gradient(135deg, #1B4332, #2D6A4F)">
+        <span>שלום טל 👋</span>
+        <span style="opacity:0.7; font-size:10px">ראשון</span>
+      </div>
+      <div class="mini-btn" style="background: #1B4332">✨ צרי פוסט חדש</div>
+      <div>
+        <div class="mini-badge" style="background: #D8F3DC; color: #1B4332">אינסטגרם</div>
+      </div>
+      <div class="mini-card" style="margin-top:8px; border-right: 3px solid #1B4332">
+        <div class="mini-num" style="color: #1B4332">12</div>
+        <div>פוסטים שפורסמו</div>
+      </div>
+    </div>
+    <div class="color-info">
+      <div class="color-name">A — Forest Deep</div>
+      <div class="color-desc">ירוק יער כהה ועמוק. מקצועי, עוצמתי, אמין.</div>
+      <div class="color-tags">
+        <span class="color-tag">#1B4332</span>
+        <span class="color-tag">כהה</span>
+        <span class="color-tag">מוחשי</span>
+      </div>
+      <div class="sel-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+  <!-- Option B: Sage Refined (current evolved) -->
+  <div class="color-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="color-swatch" style="background: linear-gradient(135deg, #4A5C42, #6B7F63)">🍃</div>
+    <div class="color-preview">
+      <div class="mini-header" style="background: linear-gradient(135deg, #4A5C42, #6B7F63)">
+        <span>שלום טל 👋</span>
+        <span style="opacity:0.7; font-size:10px">ראשון</span>
+      </div>
+      <div class="mini-btn" style="background: #4A5C42">✨ צרי פוסט חדש</div>
+      <div>
+        <div class="mini-badge" style="background: #E4ECE1; color: #4A5C42">אינסטגרם</div>
+      </div>
+      <div class="mini-card" style="margin-top:8px; border-right: 3px solid #4A5C42">
+        <div class="mini-num" style="color: #4A5C42">12</div>
+        <div>פוסטים שפורסמו</div>
+      </div>
+    </div>
+    <div class="color-info">
+      <div class="color-name">B — Sage Refined</div>
+      <div class="color-desc">הירוק הנוכחי, אבל מחודד. מוכר, חם, אמין.</div>
+      <div class="color-tags">
+        <span class="color-tag">#4A5C42</span>
+        <span class="color-tag">מוכר</span>
+        <span class="color-tag">ממותג</span>
+      </div>
+      <div class="sel-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+  <!-- Option C: Emerald Vibrant -->
+  <div class="color-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="color-swatch" style="background: linear-gradient(135deg, #065F46, #059669)">✨</div>
+    <div class="color-preview">
+      <div class="mini-header" style="background: linear-gradient(135deg, #065F46, #059669)">
+        <span>שלום טל 👋</span>
+        <span style="opacity:0.7; font-size:10px">ראשון</span>
+      </div>
+      <div class="mini-btn" style="background: #059669">✨ צרי פוסט חדש</div>
+      <div>
+        <div class="mini-badge" style="background: #D1FAE5; color: #065F46">אינסטגרם</div>
+      </div>
+      <div class="mini-card" style="margin-top:8px; border-right: 3px solid #059669">
+        <div class="mini-num" style="color: #059669">12</div>
+        <div>פוסטים שפורסמו</div>
+      </div>
+    </div>
+    <div class="color-info">
+      <div class="color-name">C — Emerald Vibrant</div>
+      <div class="color-desc">ירוק אמרלד טרי ומודרני. חיוני, עכשווי, בולט.</div>
+      <div class="color-tags">
+        <span class="color-tag">#059669</span>
+        <span class="color-tag">חי</span>
+        <span class="color-tag">מודרני</span>
+      </div>
+      <div class="sel-badge">✓ נבחר</div>
+    </div>
+  </div>
+
+</div>

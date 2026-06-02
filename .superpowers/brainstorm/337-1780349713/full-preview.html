@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tal Shani — Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: #F1F3F5;
+  direction: rtl;
+  color: #111827;
+  padding: 32px 24px;
+}
+h1 { font-size: 28px; font-weight: 800; color: #111827; margin-bottom: 4px; }
+.page-sub { font-size: 14px; color: #6B7280; margin-bottom: 32px; }
+
+.screens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 1100px) { .screens { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) { .screens { grid-template-columns: 1fr; } }
+
+.screen-wrap { }
+.screen-label { font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* Phone frame */
+.phone {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #E5E7EB;
+}
+.status-bar {
+  background: #4A5C42;
+  padding: 12px 18px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.status-time { font-size: 11px; font-weight: 700; color: #fff; }
+.status-icons { display: flex; gap: 4px; align-items: center; }
+.status-icon { width: 14px; height: 8px; background: rgba(255,255,255,0.7); border-radius: 2px; }
+
+/* =================== HOME SCREEN =================== */
+.home-header {
+  background: linear-gradient(160deg, #4A5C42 0%, #3A4A34 100%);
+  padding: 20px 18px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.home-header::after {
+  content: '';
+  position: absolute;
+  top: -40px; left: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(143,175,135,0.15);
+}
+.home-header::before {
+  content: '';
+  position: absolute;
+  bottom: -30px; right: -20px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: rgba(184,137,110,0.1);
+}
+.home-topbar { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+.home-date { font-size: 10px; color: rgba(143,175,135,0.9); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 6px; }
+.home-greeting { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+.home-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; font-weight: 400; }
+.home-settings-btn {
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+.home-settings-icon { font-size: 14px; }
+
+.home-stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: -1px;
+  background: rgba(255,255,255,0.08);
+  margin: 14px -0px -28px;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  position: relative; z-index: 1;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.home-stat {
+  padding: 12px 8px;
+  text-align: center;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(10px);
+}
+.home-stat + .home-stat { border-right: 1px solid rgba(255,255,255,0.08); }
+.home-stat-num { font-size: 20px; font-weight: 800; color: #fff; }
+.home-stat-lbl { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 1px; font-weight: 500; }
+
+.home-body { padding: 36px 14px 16px; background: #F9FAFB; }
+
+.section-label {
+  font-size: 10px; font-weight: 700; color: #9CA3AF;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+.cta-btn {
+  background: #4A5C42;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 16px rgba(74,92,66,0.25);
+}
+.cta-btn-left { display: flex; align-items: center; gap: 12px; }
+.cta-btn-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.cta-btn-title { font-size: 13px; font-weight: 700; }
+.cta-btn-sub { font-size: 10px; opacity: 0.65; margin-top: 1px; }
+.cta-btn-arrow { font-size: 16px; opacity: 0.6; }
+
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.quick-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.quick-card-icon { width: 28px; height: 28px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.quick-card-title { font-size: 12px; font-weight: 700; color: #111827; }
+.quick-card-sub { font-size: 10px; color: #9CA3AF; margin-top: 2px; }
+
+.recent-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.recent-header { padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F3F4F6; }
+.recent-title { font-size: 12px; font-weight: 700; color: #111827; }
+.recent-link { font-size: 10px; color: #4A5C42; font-weight: 600; }
+.recent-item { padding: 10px 14px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #F9FAFB; }
+.recent-item:last-child { border-bottom: none; }
+.recent-dot { width: 6px; height: 6px; border-radius: 50%; background: #4A5C42; flex-shrink: 0; }
+.recent-dot.earth { background: #B8896E; }
+.recent-lines { flex: 1; }
+.recent-line { height: 6px; background: #F3F4F6; border-radius: 3px; margin-bottom: 3px; }
+.recent-line.w70 { width: 70%; }
+.recent-tag { font-size: 9px; background: #F3F4F6; color: #6B7280; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+
+/* Bottom Nav */
+.bottom-nav {
+  background: #fff;
+  border-top: 1px solid #F3F4F6;
+  padding: 8px 6px 12px;
+  display: flex;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; border-radius: 10px; }
+.nav-item.active { background: #F0F4EE; }
+.nav-dot { width: 18px; height: 18px; border-radius: 5px; background: #E5E7EB; }
+.nav-dot.active { background: #4A5C42; }
+.nav-lbl { font-size: 9px; color: #9CA3AF; font-weight: 500; }
+.nav-lbl.active { color: #4A5C42; font-weight: 700; }
+
+/* =================== CREATE SCREEN =================== */
+.create-header {
+  background: linear-gradient(160deg, #4A5C42 0%, #3A4A34 100%);
+  padding: 20px 18px 22px;
+}
+.create-title { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+.create-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+
+.create-body { padding: 16px 14px; background: #F9FAFB; }
+
+.field-label { font-size: 10px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+
+.platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 16px; }
+.platform-btn {
+  background: #fff;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  display: flex; align-items: center; gap: 8px;
+}
+.platform-btn.active {
+  background: #4A5C42;
+  border-color: #4A5C42;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(74,92,66,0.25);
+}
+.platform-emoji { font-size: 14px; }
+
+.type-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.type-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  background: #fff;
+  border: 1.5px solid #E5E7EB;
+  color: #374151;
+}
+.type-pill.active {
+  background: #B8896E;
+  border-color: #B8896E;
+  color: #fff;
+  font-weight: 700;
+}
+
+.brief-box {
+  background: #fff;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.brief-area {
+  padding: 12px 14px;
+}
+.brief-line { height: 6px; background: #F3F4F6; border-radius: 3px; margin-bottom: 6px; }
+.brief-line.w80 { width: 80%; }
+.brief-line.w50 { width: 50%; }
+.brief-cursor { display: inline-block; width: 2px; height: 14px; background: #4A5C42; animation: blink 1s infinite; vertical-align: middle; margin-top: -3px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.brief-footer { padding: 8px 14px; border-top: 1px solid #F3F4F6; display: flex; justify-content: space-between; }
+.brief-count { font-size: 10px; color: #9CA3AF; }
+.brief-hint { font-size: 10px; color: #4A5C42; font-weight: 600; }
+
+.generate-btn {
+  background: #4A5C42;
+  border-radius: 12px;
+  padding: 15px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(74,92,66,0.28);
+  letter-spacing: 0.2px;
+}
+
+/* =================== RESULT SCREEN =================== */
+.result-header {
+  background: linear-gradient(160deg, #4A5C42 0%, #3A4A34 100%);
+  padding: 20px 18px 22px;
+  display: flex; align-items: center; gap: 12px;
+}
+.back-btn {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #fff; flex-shrink: 0;
+}
+.result-title { font-size: 18px; font-weight: 800; color: #fff; }
+.result-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+.result-body { padding: 14px 14px; background: #F9FAFB; }
+
+.badges-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.badge-chip {
+  font-size: 10px; font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+.badge-green { background: #E4ECE1; color: #4A5C42; border-color: rgba(74,92,66,0.2); }
+.badge-earth { background: #FEF3EE; color: #B8896E; border-color: rgba(184,137,110,0.2); }
+
+.post-card {
+  background: #fff;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.post-card-header {
+  padding: 10px 14px;
+  background: #F9FAFB;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex; align-items: center; gap: 6px;
+}
+.post-card-icon { font-size: 12px; }
+.post-card-label { font-size: 11px; font-weight: 600; color: #4A5C42; }
+.post-lines { padding: 14px; }
+.post-line { height: 7px; background: #F3F4F6; border-radius: 4px; margin-bottom: 7px; }
+.post-line.w90 { width: 90%; }
+.post-line.w75 { width: 75%; }
+.post-line.w85 { width: 85%; }
+.post-line.w60 { width: 60%; }
+
+.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.action-btn {
+  background: #fff;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.action-icon { font-size: 13px; }
+
+.publish-btn {
+  background: #4A5C42;
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 4px 14px rgba(74,92,66,0.25);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.draft-btn {
+  background: #fff;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 12px;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  margin-top: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+/* Approval bar */
+.approval-bar {
+  margin-top: 40px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.approval-title { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 6px; }
+.approval-sub { font-size: 13px; color: #6B7280; margin-bottom: 16px; }
+.approval-btns { display: flex; gap: 10px; }
+.btn-approve {
+  background: #4A5C42;
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: 'Heebo', sans-serif;
+  transition: all 0.2s;
+}
+.btn-approve:hover { background: #3A4A34; transform: translateY(-1px); }
+.btn-changes {
+  background: #fff;
+  color: #374151;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid #E5E7EB;
+  font-family: 'Heebo', sans-serif;
+  transition: all 0.2s;
+}
+.btn-changes:hover { border-color: #4A5C42; color: #4A5C42; }
+</style>
+</head>
+<body>
+
+<h1>טל שני — עיצוב חדש 🎨</h1>
+<p class="page-sub">Clean SaaS · Sage Refined · Heebo — תצוגה מקדימה של 3 מסכים מרכזיים</p>
+
+<div class="screens">
+
+  <!-- ===== SCREEN 1: HOME ===== -->
+  <div class="screen-wrap">
+    <div class="screen-label">🏠 מסך ראשי</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <div class="status-icon" style="width:10px;height:10px;border-radius:50%"></div>
+          <div class="status-icon"></div>
+        </div>
+      </div>
+      <div class="home-header">
+        <div class="home-topbar">
+          <div>
+            <div class="home-date">ראשון, 1 ביוני 2025</div>
+            <div class="home-greeting">שלום טל 👋</div>
+            <div class="home-sub">מה נפרסם מדהים היום?</div>
+          </div>
+          <div class="home-settings-btn">
+            <span class="home-settings-icon">⚙️</span>
+          </div>
+        </div>
+        <div class="home-stats-row">
+          <div class="home-stat"><div class="home-stat-num">12</div><div class="home-stat-lbl">פוסטים</div></div>
+          <div class="home-stat"><div class="home-stat-num">5</div><div class="home-stat-lbl">טיוטות</div></div>
+          <div class="home-stat"><div class="home-stat-num">3</div><div class="home-stat-lbl">מתוזמן</div></div>
+        </div>
+      </div>
+      <div class="home-body">
+        <div class="cta-btn">
+          <div class="cta-btn-left">
+            <div class="cta-btn-icon">✨</div>
+            <div>
+              <div class="cta-btn-title">צרי פוסט חדש</div>
+              <div class="cta-btn-sub">AI יכתוב בסגנון שלך</div>
+            </div>
+          </div>
+          <div class="cta-btn-arrow">←</div>
+        </div>
+        <div class="quick-grid">
+          <div class="quick-card">
+            <div class="quick-card-icon" style="background:#E4ECE1">📅</div>
+            <div class="quick-card-title">לוח תוכן</div>
+            <div class="quick-card-sub">3 ממתינים</div>
+          </div>
+          <div class="quick-card">
+            <div class="quick-card-icon" style="background:#FEF3EE">📊</div>
+            <div class="quick-card-title">חקר שוק</div>
+            <div class="quick-card-sub">עודכן אתמול</div>
+          </div>
+        </div>
+        <div class="section-label">פורסם לאחרונה</div>
+        <div class="recent-card">
+          <div class="recent-header">
+            <div class="recent-title">ארכיון פוסטים</div>
+            <div class="recent-link">ראי הכל ←</div>
+          </div>
+          <div class="recent-item">
+            <div class="recent-dot"></div>
+            <div class="recent-lines">
+              <div class="recent-line"></div>
+              <div class="recent-line w70"></div>
+            </div>
+            <div class="recent-tag">אינסטגרם</div>
+          </div>
+          <div class="recent-item">
+            <div class="recent-dot earth"></div>
+            <div class="recent-lines">
+              <div class="recent-line"></div>
+              <div class="recent-line w70"></div>
+            </div>
+            <div class="recent-tag">לינקדאין</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active">
+          <div class="nav-dot active"></div>
+          <div class="nav-lbl active">ראשי</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-dot"></div>
+          <div class="nav-lbl">פוסט</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-dot"></div>
+          <div class="nav-lbl">מחקר</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-dot"></div>
+          <div class="nav-lbl">לוח</div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-dot"></div>
+          <div class="nav-lbl">ארכיון</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 2: CREATE ===== -->
+  <div class="screen-wrap">
+    <div class="screen-label">✍️ יצירת פוסט</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <div class="status-icon" style="width:10px;height:10px;border-radius:50%"></div>
+        </div>
+      </div>
+      <div class="create-header">
+        <div class="create-title">מחולל פוסטים</div>
+        <div class="create-sub">AI ינסח בדיוק בסגנון שלך ✨</div>
+      </div>
+      <div class="create-body">
+        <div class="field-label">פלטפורמת פרסום</div>
+        <div class="platform-grid">
+          <div class="platform-btn active"><span class="platform-emoji">📱</span>אינסטגרם</div>
+          <div class="platform-btn"><span class="platform-emoji">👥</span>פייסבוק</div>
+          <div class="platform-btn"><span class="platform-emoji">💼</span>לינקדאין</div>
+          <div class="platform-btn"><span class="platform-emoji">🚀</span>כולם</div>
+        </div>
+        <div class="field-label">סוג הפוסט</div>
+        <div class="type-pills">
+          <div class="type-pill active">💡 טיפ</div>
+          <div class="type-pill">📣 מכירה</div>
+          <div class="type-pill">🎬 BTS</div>
+          <div class="type-pill">❓ שאלה</div>
+          <div class="type-pill">🏆 סיפור</div>
+        </div>
+        <div class="field-label">על מה נכתוב?</div>
+        <div class="brief-box">
+          <div class="brief-area">
+            <div class="brief-line"></div>
+            <div class="brief-line w80"></div>
+            <div class="brief-line w50"></div>
+            <span class="brief-cursor"></span>
+          </div>
+          <div class="brief-footer">
+            <div class="brief-count">48 תווים</div>
+            <div class="brief-hint">✓ מספיק</div>
+          </div>
+        </div>
+        <div class="generate-btn">✨ צרי לי פוסט מהמם</div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <div class="nav-dot"></div>
+          <div class="nav-lbl">ראשי</div>
+        </div>
+        <div class="nav-item active">
+          <div class="nav-dot active"></div>
+          <div class="nav-lbl active">פוסט</div>
+        </div>
+        <div class="nav-item"><div class="nav-dot"></div><div class="nav-lbl">מחקר</div></div>
+        <div class="nav-item"><div class="nav-dot"></div><div class="nav-lbl">לוח</div></div>
+        <div class="nav-item"><div class="nav-dot"></div><div class="nav-lbl">ארכיון</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 3: RESULT ===== -->
+  <div class="screen-wrap">
+    <div class="screen-label">🎉 הפוסט מוכן</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons"><div class="status-icon" style="width:10px;height:10px;border-radius:50%"></div></div>
+      </div>
+      <div class="result-header">
+        <div class="back-btn">→</div>
+        <div>
+          <div class="result-title">הפוסט מוכן! 🎉</div>
+          <div class="result-sub">עברי, ערכי ופרסמי</div>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="badges-row">
+          <span class="badge-chip badge-green">📱 אינסטגרם</span>
+          <span class="badge-chip badge-earth">💡 טיפ מקצועי</span>
+        </div>
+        <div class="post-card">
+          <div class="post-card-header">
+            <span class="post-card-icon">✨</span>
+            <span class="post-card-label">טיוטת הפוסט — ניתן לערוך</span>
+          </div>
+          <div class="post-lines">
+            <div class="post-line"></div>
+            <div class="post-line w90"></div>
+            <div class="post-line w75"></div>
+            <div class="post-line"></div>
+            <div class="post-line w85"></div>
+            <div class="post-line w60"></div>
+          </div>
+        </div>
+        <div class="action-row">
+          <div class="action-btn"><span class="action-icon">📋</span>העתיקי</div>
+          <div class="action-btn"><span class="action-icon">🔄</span>שנה / שפר</div>
+        </div>
+        <div class="action-row" style="margin-bottom:12px">
+          <div class="action-btn"><span class="action-icon">🎨</span>עצבי תמונה</div>
+          <div class="action-btn"><span class="action-icon">🖼️</span>GPT Image</div>
+        </div>
+        <div class="publish-btn">✓ סמני כפורסם</div>
+        <div class="draft-btn">🔖 שמרי כטיוטה</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Approval section -->
+<div class="approval-bar">
+  <div class="approval-title">זה הכיוון? 🎨</div>
+  <div class="approval-sub">אם מאשרת — אכתוב את כל הקוד החדש ואחליף את העיצוב הישן. שינוי מלא לכל 6 מסכי האפליקציה.</div>
+  <div class="approval-btns">
+    <button class="btn-approve" onclick="window.location.href='?approved=true'; document.querySelector('.approval-bar').innerHTML='<div style=\'font-size:20px;font-weight:800;color:#4A5C42\'>✓ מאושר! מתחיל לכתוב קוד...</div>'">כן, בואו נעשה את זה! ✨</button>
+    <button class="btn-changes" onclick="alert('כתבי בטרמינל מה תרצי לשנות')">יש לי שינויים</button>
+  </div>
+</div>
+
+</body>
+</html>
